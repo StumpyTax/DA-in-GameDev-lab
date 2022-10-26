@@ -35,171 +35,203 @@
 - ✨Magic ✨
 
 ## Цель работы
-Ознакомиться с основными операторами зыка Python на примере реализации линейной регрессии.
+Познакомиться с программными средствами для создания системы машинного обучения и ее интеграции в Unity.
 
 ## Задание 1
-### Пошагово выполнить каждый пункт раздела "ход работы" с описанием и примерами реализации задач
-Ход работы:
-- Произвести подготовку данных для работы с алгоритмом линейной регрессии. 10 видов данных были установлены случайным образом, и данные находились в линейной зависимости. Данные преобразуются в формат массива, чтобы их можно было вычислить напрямую при использовании умножения и сложения.
+### Реализовать систему машинного обучения в связке Python -Google-Sheets – Unity.
 
-```py
+```С#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
 
-import numpy as np
-import matplotlib.pyplot as plt
+public class RollerAgent : Agent
+{
+    Rigidbody rBody;
+    // Start is called before the first frame update
+    void Start()
+    {
+        rBody = GetComponent<Rigidbody>();
+    }
 
-x = [3,21,22,34,54,34,55,67,89,99]
-x = np.array(x)
-y = [2,22,24,65,79,82,55,130,150,199]
-y = np.array(y)
+    public Transform Target;
+    public override void OnEpisodeBegin()
+    {
+        if (this.transform.localPosition.y < 0)
+        {
+            this.rBody.angularVelocity = Vector3.zero;
+            this.rBody.velocity = Vector3.zero;
+            this.transform.localPosition = new Vector3(0, 0.5f, 0);
+        }
 
-plt.scatter(x,y)
+        Target.localPosition = new Vector3(Random.value * 8-4, 0.5f, Random.value * 8-4);
+    }
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        sensor.AddObservation(Target.localPosition);
+        sensor.AddObservation(this.transform.localPosition);
+        sensor.AddObservation(rBody.velocity.x);
+        sensor.AddObservation(rBody.velocity.z);
+    }
+    public float forceMultiplier = 10;
+    public override void OnActionReceived(ActionBuffers actionBuffers)
+    {
+        Vector3 controlSignal = Vector3.zero;
+        controlSignal.x = actionBuffers.ContinuousActions[0];
+        controlSignal.z = actionBuffers.ContinuousActions[1];
+        rBody.AddForce(controlSignal * forceMultiplier);
 
-def model(a, b, x):
-    return a*x + b
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, Target.localPosition);
 
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction=model(a, b, x)
-    return (0.5/num) * (np.square(prediction-y)).sum()
-
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0/num) * ((prediction -y)*x).sum()
-    db = (1.0/num) * ((prediction -y).sum())
-    a = a - Lr*da
-    b = b - Lr*db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a,b = optimize(a,b,x,y)
-    return a,b
-
-a = np.random.rand(1)
-print(a)
-b = np.random.rand(1)
-print(b)
-Lr = 0.000001
-
-a,b = iterate(a,b,x,y,10000)
-prediction = model(a,b,x)
-loss = loss_function(a, b, x, y)
-print(a, b, loss)
-plt.scatter(x, y)
-plt.plot(x, prediction)
-
+        if(distanceToTarget < 1.42f)
+        {
+            SetReward(1.0f);
+            EndEpisode();
+        }
+        else if (this.transform.localPosition.y < 0)
+        {
+            EndEpisode();
+        }
+    }
+}
 ```
-
-- Определите связанные функции. Функция модели: определяет модель линейной регрессии wx+b. Функция потерь: функция потерь среднеквадратичной ошибки. Функция оптимизации: метод градиентного спуска для нахождения частных производных w и b.
-
 
 ## Задание 2
-### Должна ли величина loss стремиться к нулю при изменении исходных данных? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ.
-Да, должна.
+### Подробно опишите каждую строку файла конфигурации нейронной сети, доступного в папке с файлами проекта по ссылке. Самостоятельно найдите информацию о компонентах Decision Requester, Behavior Parameters, добавленных на сфере.
 
-```py
-import numpy as np
-import matplotlib.pyplot as plt
-
-x = [0,-1, 1, 2 ,3 ,4,5,6,7,8]
-x = np.array(x)
-y = [0,0,0,0,0,0,0,0,0,0]
-y = np.array(y)
-
-plt.scatter(x,y)
-
-def model(a, b, x):
-    return a*x + b
-
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction=model(a, b, x)
-    return (0.5/num) * (np.square(prediction-y)).sum()
-
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0/num) * ((prediction -y)*x).sum()
-    db = (1.0/num) * ((prediction -y).sum())
-    a = a - Lr*da
-    b = b - Lr*db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a,b = optimize(a,b,x,y)
-    return a,b
-
-a = np.random.rand(1)
-print(a)
-b = np.random.rand(1)
-print(b)
-Lr = 0.09
-
-a,b = iterate(a,b,x,y,10000)
-prediction = model(a,b,x)
-loss = loss_function(a, b, x, y)
-print(a, b, loss)
-plt.scatter(x, y)
-plt.plot(x, prediction)
-
+```yaml
+#Указывает какое поведение отслеживается
+behaviors:
+  #Имя модели поведения
+  RollerBall:
+    #Тип обучения, по умолчанию ppo
+    trainer_type: ppo
+    #Параметры содержащие данные которые управляют обучением
+    hyperparameters:
+    #Количество опытов в каждой итерации градиентного спуска.
+      batch_size: 10
+      #При trainer_type:
+      # PPO: количество опытов, которые необходимо собрать перед обновлением модели поведения. Соответствует тому, сколько опыта должно быть собрано, прежде чем мы будем изучать или обновлять модель. Это значение должно быть в несколько раз больше, чем batch_size. Обычно больший размер буфера соответствует более стабильным обновлениям обучения.
+      # SAC: максимальный размер буфера опыта — примерно в тысячи раз больше, чем ваши эпизоды, чтобы SAC мог учиться как на старом, так и на новом опыте.
+      buffer_size: 100
+      # Начальная скорость обучения для градиентного спуска
+      learning_rate: 3.0e-4
+      #Сила энтропийной регуляризации, которая делает поведение «более случайным».
+      beta: 5.0e-4
+      #Влияет на то, насколько быстро поведение может развиваться во время обучения
+      epsilon: 0.2
+      # Параметр регуляризации (лямбда), используемый при расчете обобщенной оценки преимущества. Его можно рассматривать как то, насколько агент полагается на свою текущую оценку стоимости при расчете обновленной оценки стоимости.
+      lambd: 0.99
+      # Количество проходов через буфер опыта при выполнении оптимизации градиентного спуска.
+      num_epoch: 3
+      #Определяет, как скорость обучения изменяется с течением времени.
+      learning_rate_schedule: linear
+    #Конфигурация для нейронной сети
+    network_settings:
+      # Применяется ли нормализация к входным данным векторного наблюдения.
+      normalize: false
+      #Количество юнитов в скрытых слоях нейронной сети
+      hidden_units: 128
+      #Количество скрытых слоев в нейронной сети
+      num_layers: 2
+    #Позволяет задавать настройки как для внешних (т. е. основанных на среде), так и для внутренних сигналов вознаграждения (например, любопытство и GAIL).
+    reward_signals:
+      #Настройки для сигналов основанных на среде
+      extrinsic:
+        #Коэффициент дисконтирования для будущих вознаграждений, поступающих из окружающей среды.
+        gamma: 0.99
+        #Фактор, на который умножается вознаграждение, данное средой. Типичные диапазоны будут варьироваться в зависимости от сигнала вознаграждения.
+        strength: 1.0
+    #Максимальное кол-во шагов
+    max_steps: 500000
+    #Сколько шагов опыта нужно собрать для каждого агента, прежде чем добавить его в буфер опыта.
+    time_horizon: 64
+    #Количество опытов, которое необходимо собрать перед созданием и отображением статистики обучения.
+    summary_freq: 10000
 ```
+DecisionRequest это компонент который вызывает RequestDecision.
+Behavior Parameters это параметры поведения.
 
 ## Задание 3
-### Какова роль параметра Lr? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ. В качестве эксперимента можете изменить значение параметра.
+### Доработайте сцену и обучите ML-Agent таким образом, чтобы шар перемещался между двумя кубами разного цвета. Кубы должны, как и в первом задании, случайно изменять координаты на плоскости.
 
-Lr определяет размер шага за итерацию.
+```С#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
 
-```py
-import numpy as np
-import matplotlib.pyplot as plt
+public class RollerAgent : Agent
+{
+  Rigidbody rBody;
+  // Start is called before the first frame update
+  void Start()
+  {
+    rBody=GetComponent<Rigidbody>();
+  }
+  public Transform Target;
+  public Transform Target2;
+  public bool firstOrSecond;
+  public float targetsDistance=8;
+  public override void OnEpisodeBegin()
+  {
+    if (this.transform.localPosition.y<0){
+      this.rBody.angularVelocity=Vector3.zero;
+      this.rBody.velocity=Vector3.zero;
+      this.transform.localPosition=new Vector3(0,0.5f,0);
+    }
 
-x = [3,21,22,34,54,34,55,67,89,99]
-x = np.array(x)
-y = [2,22,24,65,79,82,55,130,150,199]
-y = np.array(y)
-plt.scatter(x,y)
+    Target.localPosition=new Vector3(Random.value*8-4,0.5f,Random.value*8-4);
+    Target2.localPosition=new Vector3(Random.value*8-4,0.5f,Random.value*8-4);
+    targetsDistance=Vector3.Distance(Target.localPosition,Target2.localPosition);
+    if (!(targetsDistance>3 && targetsDistance<7))
+      while(!(targetsDistance>3 && targetsDistance<7)){
+       Target.localPosition=new Vector3(Random.value*8-4,0.5f,Random.value*8-4);
+        Target2.localPosition=new Vector3(Random.value*8-4,0.5f,Random.value*8-4);
+        targetsDistance=Vector3.Distance(Target.localPosition,Target2.localPosition);
+      }
+  }
 
-def model(a, b, x):
-    return a*x + b
+  public override void CollectObservations(VectorSensor sensor)
+  {
+    sensor.AddObservation(Target.localPosition);
+    sensor.AddObservation(Target2.localPosition);
+    sensor.AddObservation(this.transform.localPosition);
+    sensor.AddObservation(rBody.velocity.x);
+    sensor.AddObservation(rBody.velocity.z);
+  }
+  public float forceMultiplier=10;
+  public override void OnActionReceived(ActionBuffers actionBuffers)
+  {
+    Vector3 controlSignal =Vector3.zero;
+    controlSignal.x=actionBuffers.ContinuousActions[0];
+    controlSignal.z=actionBuffers.ContinuousActions[1];
+    rBody.AddForce(controlSignal*forceMultiplier);
 
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction=model(a, b, x)
-    return (0.5/num) * (np.square(prediction-y)).sum()
+    float distanceToTarget=Vector3.Distance(this.transform.localPosition,Target.localPosition);
+    float distanceToTarget2=Vector3.Distance(this.transform.localPosition,Target2.localPosition);
+    if(distanceToTarget+distanceToTarget2==targetsDistance){
+      SetReward(1.0f);
+      EndEpisode();
+    }
+    else if (this.transform.localPosition.y<0){
+      EndEpisode();
+    }
 
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0/num) * ((prediction -y)*x).sum()
-    db = (1.0/num) * ((prediction -y).sum())
-    a = a - Lr*da
-    b = b - Lr*db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a,b = optimize(a,b,x,y)
-    return a,b
-
-a = np.random.rand(1)
-print(a)
-b = np.random.rand(1)
-print(b)
-Lr = 0.0000005
-
-a,b = iterate(a,b,x,y,2000)
-prediction = model(a,b,x)
-loss = loss_function(a, b, x, y)
-print(a, b, loss)
-plt.scatter(x, y)
-plt.plot(x, prediction)
+  }
+}
 
 ```
 
 ## Выводы
-Ознакомился с основными операторами зыка Python на примере реализации линейной регрессии.
+Игровой баланс — это ответвление игрового дизайна, которое описывается как математико-алгоритмическая модель игровых чисел, игровой механики и взаимосвязей между ними. Игровой баланс состоит из настройки значений для создания определенного пользовательского опыта. Улучшение восприятия и опыта игроков является целью балансировки игры.
+
+Системы машинного обучения могут быть использованы для составления статистики. Благодаря машинному обучению можно симулировать на миллионы игр больше, чем способны сыграть живые игроки за тот же промежуток времени. И исходя из этой статистики менять баланс.
 
 | Plugin | README |
 | ------ | ------ |
