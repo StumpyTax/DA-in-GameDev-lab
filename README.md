@@ -1,5 +1,5 @@
 # АНАЛИЗ ДАННЫХ И ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ [in GameDev]
-Отчет по лабораторной работе #1 выполнил(а):
+Отчет по лабораторной работе #4 выполнил(а):
 - Демидов Никита Александрович
 - РИ-210913
 Отметка о выполнении заданий (заполняется студентом):
@@ -35,171 +35,31 @@
 - ✨Magic ✨
 
 ## Цель работы
-Ознакомиться с основными операторами зыка Python на примере реализации линейной регрессии.
+Ознакомится с перцептронами.
 
 ## Задание 1
-### Пошагово выполнить каждый пункт раздела "ход работы" с описанием и примерами реализации задач
+### Реализовать перцептрон, умеющий проводить вычисления: OR, XOR, AND, NAND. Дать комментарии о корректности работы.
 Ход работы:
-- Произвести подготовку данных для работы с алгоритмом линейной регрессии. 10 видов данных были установлены случайным образом, и данные находились в линейной зависимости. Данные преобразуются в формат массива, чтобы их можно было вычислить напрямую при использовании умножения и сложения.
+OR, AND, NAND удалось реализовать, работают исправно.
+XOR невозможно реализовать на однослойном перцептроне.
 
-```py
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-x = [3,21,22,34,54,34,55,67,89,99]
-x = np.array(x)
-y = [2,22,24,65,79,82,55,130,150,199]
-y = np.array(y)
-
-plt.scatter(x,y)
-
-def model(a, b, x):
-    return a*x + b
-
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction=model(a, b, x)
-    return (0.5/num) * (np.square(prediction-y)).sum()
-
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0/num) * ((prediction -y)*x).sum()
-    db = (1.0/num) * ((prediction -y).sum())
-    a = a - Lr*da
-    b = b - Lr*db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a,b = optimize(a,b,x,y)
-    return a,b
-
-a = np.random.rand(1)
-print(a)
-b = np.random.rand(1)
-print(b)
-Lr = 0.000001
-
-a,b = iterate(a,b,x,y,10000)
-prediction = model(a,b,x)
-loss = loss_function(a, b, x, y)
-print(a, b, loss)
-plt.scatter(x, y)
-plt.plot(x, prediction)
-
-```
-
-- Определите связанные функции. Функция модели: определяет модель линейной регрессии wx+b. Функция потерь: функция потерь среднеквадратичной ошибки. Функция оптимизации: метод градиентного спуска для нахождения частных производных w и b.
-
+Реализация каждой операции находится на отдельной сцене. 
 
 ## Задание 2
-### Должна ли величина loss стремиться к нулю при изменении исходных данных? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ.
-Да, должна.
+### Построить график зависимости ошибки обучения от кол-ва эпох. Указать от чего зависит необходимое кол-во эпох. 
 
-```py
-import numpy as np
-import matplotlib.pyplot as plt
+Данные для графика были взяты из одного из запусков операции NAND.
+https://docs.google.com/spreadsheets/d/1U7wUJSMO76Anld2x02FPXi7TRwzo6_rBrTb29e4QAhw/edit?usp=sharing
 
-x = [0,-1, 1, 2 ,3 ,4,5,6,7,8]
-x = np.array(x)
-y = [0,0,0,0,0,0,0,0,0,0]
-y = np.array(y)
-
-plt.scatter(x,y)
-
-def model(a, b, x):
-    return a*x + b
-
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction=model(a, b, x)
-    return (0.5/num) * (np.square(prediction-y)).sum()
-
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0/num) * ((prediction -y)*x).sum()
-    db = (1.0/num) * ((prediction -y).sum())
-    a = a - Lr*da
-    b = b - Lr*db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a,b = optimize(a,b,x,y)
-    return a,b
-
-a = np.random.rand(1)
-print(a)
-b = np.random.rand(1)
-print(b)
-Lr = 0.09
-
-a,b = iterate(a,b,x,y,10000)
-prediction = model(a,b,x)
-loss = loss_function(a, b, x, y)
-print(a, b, loss)
-plt.scatter(x, y)
-plt.plot(x, prediction)
-
-```
+Кол-во эпох зависит от сложности задачаи. Чем больше соложность тем большее кол-во эпох необходимо для обучения.
 
 ## Задание 3
-### Какова роль параметра Lr? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ. В качестве эксперимента можете изменить значение параметра.
+### Построить визуальную модель работы перцептрона на сцене Unity.
 
-Lr определяет размер шага за итерацию.
-
-```py
-import numpy as np
-import matplotlib.pyplot as plt
-
-x = [3,21,22,34,54,34,55,67,89,99]
-x = np.array(x)
-y = [2,22,24,65,79,82,55,130,150,199]
-y = np.array(y)
-plt.scatter(x,y)
-
-def model(a, b, x):
-    return a*x + b
-
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction=model(a, b, x)
-    return (0.5/num) * (np.square(prediction-y)).sum()
-
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0/num) * ((prediction -y)*x).sum()
-    db = (1.0/num) * ((prediction -y).sum())
-    a = a - Lr*da
-    b = b - Lr*db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a,b = optimize(a,b,x,y)
-    return a,b
-
-a = np.random.rand(1)
-print(a)
-b = np.random.rand(1)
-print(b)
-Lr = 0.0000005
-
-a,b = iterate(a,b,x,y,2000)
-prediction = model(a,b,x)
-loss = loss_function(a, b, x, y)
-print(a, b, loss)
-plt.scatter(x, y)
-plt.plot(x, prediction)
-
-```
+Для каждой операции на отдельной сцене построены визуализации. Черный цвет обозначает 0, белый 1.
 
 ## Выводы
-Ознакомился с основными операторами зыка Python на примере реализации линейной регрессии.
+Ознакомится с перцептронами.
 
 | Plugin | README |
 | ------ | ------ |
