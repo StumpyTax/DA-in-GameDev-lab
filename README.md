@@ -108,7 +108,7 @@ behaviors:
 ### Опишите результаты, выведенные в TensorBoard. 
 
 С изначальным yaml:
-![](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/1.png)
+![1](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/1.png)
 
 
 ## Выводы
