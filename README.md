@@ -109,6 +109,8 @@ behaviors:
 
 С изначальным yaml:
 ![1](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/1.png)
+![2](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.png)
+![3](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/3.png)
 
 
 ## Выводы
