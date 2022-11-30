@@ -35,7 +35,7 @@
 - ✨Magic ✨
 
 ## Цель работы
-Ознакомиться с основными операторами зыка Python на примере реализации линейной регрессии.
+Интеграция экономической системы в проект Unity и обучение ML-Agent.
 
 ## Задание 1
 ### 1. Измените параметры файла. yaml-агента и определить какие параметры и как влияют на обучение модели.
@@ -112,10 +112,16 @@ behaviors:
 ![2](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.png)
 ![3](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/3.png)
 
+C измененным yaml:
+
+![2.1](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.1.png)
+![2.2](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.2.png)
+![2.3](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.3.png)
+
+
 
 ## Выводы
-
-Абзац умных слов о том, что было сделано и что было узнано.
+Интегрировал экономическую систему в проект Unity и обучил ML-Agent.
 
 | Plugin | README |
 | ------ | ------ |
