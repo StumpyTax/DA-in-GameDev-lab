@@ -108,10 +108,10 @@ behaviors:
 ### Опишите результаты, выведенные в TensorBoard. 
 
 С изначальным yaml:
-![1](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/1.png)
-![2](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.png)
-![3](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/3.png)\
-![4](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/4.png)
+![1](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/1.png)
+![2](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/2.png)
+![3](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/3.png)
+![4](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/4.png)
 
 
 C измененным yaml(beta:1.0e-3=>1.0e-5,
@@ -119,11 +119,11 @@ C измененным yaml(beta:1.0e-3=>1.0e-5,
                   num_epoch:3=>8,     
                   strength: 1.0=>0.9):
 
-![2.1](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.1.png)
-![2.2](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.2.png)
-![2.3](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.3.png)
-![2.4](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.4.png)
-![2.5](https://github.com/StumpyTax/DA-in-GameDev-lab2/tree/lab5/images/2.5.png)
+![2.1](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/2.1.png)
+![2.2](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/2.2.png)
+![2.3](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/2.3.png)
+![2.4](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/2.4.png)
+![2.5](https://raw.githubusercontent.com/StumpyTax/DA-in-GameDev-lab2/lab5/images/2.5.png)
 
 Cumulative Rewards - Накопленное вознаграждение, должно постоянно увеличиваться пока не дойдет до стабильного значения.
 
